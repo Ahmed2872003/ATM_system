@@ -15,6 +15,11 @@ public class User {
         set_account(account);
     }
     
+    public User(String name, Account account) throws Exception{
+        set_name(name);
+        set_account(account);
+    }
+    
     public User(Account account) throws Exception{
         set_account(account);
     }
@@ -24,9 +29,12 @@ public class User {
     }
     
     public void set_name(String name) throws Exception{
-        if(name == null || name.isEmpty()) new Exception("User should have a name");
         
-        if(name.length() < 3) new Exception("Name should be >= " + name_length);
+        if(name == null || name.isEmpty()) throw new Exception("User should have a name");
+        
+        if(name.length() < 3) throw new Exception("Name length should be >= " + name_length);
+        
+        this.name = name;
     }
     
     

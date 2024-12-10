@@ -21,10 +21,10 @@ CREATE TABLE user (
 CREATE TABLE account (
     id int PRIMARY KEY auto_increment,
     card_number CHAR(16) NOT NULL UNIQUE,
-    pin VARCHAR(255) NOT NULL,
     balance INT CHECK (balance >= 0 AND balance % 50 = 0),
     shared BOOLEAN NOT NULL
 );
+
 
 
 
@@ -52,11 +52,11 @@ CREATE TABLE transaction_log (
 CREATE TABLE user_account (
     user_id INT NOT NULL,
     account_id INT NOT NULL,
+    pin VARCHAR(255) NOT NULL,
     PRIMARY KEY (user_id, account_id),
     FOREIGN KEY (user_id) REFERENCES user(id),
     FOREIGN KEY (account_id) REFERENCES account(id)
 );
-
 
 DELIMITER $$
 

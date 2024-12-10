@@ -25,6 +25,13 @@ public class Account {
         set_pin(pin);
     }
     
+    public Account(String pin, int balance, boolean shared) throws Exception{
+        set_pin(pin);
+        set_balance(balance);
+        set_shared(shared);
+    }
+    
+    
     
     public void set_id(int id){
         this.id = id;
