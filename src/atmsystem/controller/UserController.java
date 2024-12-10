@@ -2,6 +2,8 @@ package atmsystem.controller;
 
 
 import atmsystem.interfaces.IUser;
+import atmsystem.models.User;
+import atmsystem.models.Transaction;
 
 public class UserController implements IUser{
     
@@ -16,29 +18,31 @@ public class UserController implements IUser{
     }
 
     @Override
-    public void withdrawFunds() {
+    public void withdrawlFunds(User user, int withdrawlAmount) throws Exception{
         throw new UnsupportedOperationException("Not supported yet."); 
+    }
+    
+    @Override
+    public void depositeFunds(User user, int depositeAmount) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 
-    @Override
-    public int checkBalance() {
-        throw new UnsupportedOperationException("Not supported yet."); 
-    }
 
     @Override
-    public void changePin() {
-        throw new UnsupportedOperationException("Not supported yet."); 
-    }
-
-    @Override
-    public Object[] viewTransactionsHistory() {
+    public int checkBalance(User user) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); 
     }
 
     @Override
-    public void depositeFunds() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void changePin(User user, String newPin) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
 
+    @Override
+    public Transaction[] viewTransactionsHistory(User user) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); 
+    }
+
+    
 }

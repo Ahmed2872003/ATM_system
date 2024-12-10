@@ -1,14 +1,21 @@
 package atmsystem;
 
-import java.io.FileNotFoundException;
-import java.security.NoSuchAlgorithmException;
+import java.math.BigInteger;
 
-import atmsystem.controller.UserController;
+import atmsystem.models.Account;
+
+import atmsystem.models.Transaction;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ATMSystem {
 
-    public static void main(String[] args)  {
+    public static void updateGUI(String data) {
+        System.out.println("GUI updated with " + data);
+    }
+
+    public static void main(String[] args) {
         
     }
-    
+
 }

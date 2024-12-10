@@ -3,6 +3,8 @@ package atmsystem.controller;
 
 import atmsystem.interfaces.IAdmin;
 
+import atmsystem.models.User;
+
 public class AdminController implements IAdmin {
     
     private static AdminController instance;
@@ -17,12 +19,12 @@ public class AdminController implements IAdmin {
     
 
     @Override
-    public void addAccount() {
+    public void addAccount(User user) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); 
     }
 
     @Override
-    public void resetPin() {
+    public void resetPin(User user, String newPin) throws Exception {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
