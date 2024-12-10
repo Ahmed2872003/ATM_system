@@ -25,6 +25,10 @@ public class Transaction {
         set_user(user);
     }
 
+    public void set_id(int id) {
+        this.id = id;
+    }
+
     public void set_type(Type type) throws Exception {
         if (type == null) {
             throw new Exception("Should provide transaction type");
@@ -37,11 +41,11 @@ public class Transaction {
         if (user == null) {
             throw new Exception("Should provide user");
         }
-        
+
         this.user = user;
 
     }
-    
+
     public int get_id() {
         return id;
     }

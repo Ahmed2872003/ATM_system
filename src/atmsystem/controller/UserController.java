@@ -43,6 +43,11 @@ public class UserController implements IUser{
     public Transaction[] viewTransactionsHistory(User user) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); 
     }
+    
+    @Override
+    public void login(User user){
+    
+    }
 
     
 }

@@ -2,3 +2,5 @@
 /build
 /nbproject
 /dist/
+/src/atmsystem/lib
+resources/config.properties
