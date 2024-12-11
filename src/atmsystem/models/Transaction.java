@@ -30,6 +30,12 @@ public class Transaction {
         set_amount(amount);
     }
     
+    public Transaction(Type type, User user, int amount) throws Exception {
+        set_type(type);
+        set_user(user);
+        set_amount(amount);
+    }
+    
 
     public void set_id(int id) {
         this.id = id;
@@ -43,8 +49,10 @@ public class Transaction {
         this.type = type;
     }
 
-    public void set_user(User user){
+    public void set_user(User user) throws Exception{
 
+        if(user == null) throw new Exception("Transactoin should contain a user");
+        
         this.user = user;
 
     }
@@ -69,9 +77,13 @@ public class Transaction {
         return user;
     }
     
+    public int get_amount(){
+        return amount;
+    }
+    
     @Override
     public String toString(){
-        return "{id: " + id + ", type: " + type.toString() + ", amount: " + amount + "}";
+        return "{transaction: {id: " + id + ", type: " + type.toString() + ", amount: " + amount + "}} => " + user.toString();
     }
 
 }

@@ -59,7 +59,7 @@ public class User {
     
     @Override
     public String toString(){
-        return "{user: {id: " + id + ", name: " + name + "}, account: " + account.toString();
+        return "{user: {id: " + id + ", name: " + name + "}, account: " + account.toString() + "}";
     }
 
 }

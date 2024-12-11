@@ -40,10 +40,10 @@ public class TransactionModel implements IModel {
             ResultSet rs = pstm.executeQuery(sql);
 
             while (rs.next()) {
-                Transaction.Type t = rs.getInt("type_id") == Transaction.Type.Deposit.getId()? Transaction.Type.Deposit : Transaction.Type.Withdrawal;
-                
-                Transaction transaction = new Transaction(rs.getInt("id"),t , null, rs.getInt("amount"));
-                
+                Transaction.Type t = rs.getInt("type_id") == Transaction.Type.Deposit.getId() ? Transaction.Type.Deposit : Transaction.Type.Withdrawal;
+
+                Transaction transaction = new Transaction(rs.getInt("id"), t, null, rs.getInt("amount"));
+
                 transactions.add(transaction);
             }
 
@@ -61,7 +61,33 @@ public class TransactionModel implements IModel {
 
     @Override
     public boolean insert(Object obj) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Connection con = null;
+
+        try {
+            con = DB.get_instance().get_connection();
+
+            Transaction transaction = (Transaction) obj;
+
+            String SQL = "INSERT INTO transaction_log(user_id, account_id, transaction_type_id, amount)\n"
+                    + "VALUES (?, ?, ?, ?)";
+            
+            PreparedStatement pstm = con.prepareStatement(SQL);
+            
+            pstm.setInt(1, transaction.get_user().get_id());
+            pstm.setInt(2, transaction.get_user().get_account().get_id());
+            pstm.setInt(3, transaction.get_type().getId());
+            pstm.setInt(4, transaction.get_amount());
+            
+            pstm.executeUpdate();
+
+            con.close();
+        } catch (Exception exp) {
+            if (con != null) {
+                con.close();
+            }
+            throw exp;
+        }
+        return true;
     }
 
 }
