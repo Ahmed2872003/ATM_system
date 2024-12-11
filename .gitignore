@@ -1,6 +1,5 @@
 /secret_key.txt
 /build
-/nbproject
 /dist/
 /src/atmsystem/lib
 /resources/config.properties

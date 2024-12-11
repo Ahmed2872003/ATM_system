@@ -44,14 +44,11 @@ CREATE TABLE transaction_log (
     user_id INT NOT NULL,
     account_id INT NOT NULL,
     transaction_type_id INT NOT NULL,
-    amount INT CHECK (amount > 0 AND amount % 50 = 0),
+    amount INT,
     FOREIGN KEY (user_id) REFERENCES user(id),
     FOREIGN KEY (account_id) REFERENCES account(id),
     FOREIGN KEY (transaction_type_id) REFERENCES transaction_type(id)
 );
-
-
-
 
 
 
@@ -96,10 +93,39 @@ CREATE TRIGGER check_balance_on_insert
 BEFORE INSERT ON account
 FOR EACH ROW
 BEGIN
+    -- Check if balance is less than 50
     IF NEW.balance < 50 THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Balance must be initially 50.';
+        SET MESSAGE_TEXT = 'Balance must be initially at least 50.';
+    END IF;
+
+    -- Check if balance is not a multiple of 50
+    IF NEW.balance % 50 != 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Balance must be a multiple of 50.';
     END IF;
 END $$
 
 DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER check_balance_on_update
+BEFORE UPDATE ON account
+FOR EACH ROW
+BEGIN
+    IF NEW.balance < 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'No sufficient funds';
+    END IF;
+    IF NEW.balance % 50 != 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Amount must be divisible by 50';
+    END IF;
+END $$
+
+DELIMITER ;
+
+
+
+

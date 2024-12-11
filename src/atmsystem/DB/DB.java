@@ -1,4 +1,4 @@
-package atmsystem;
+package atmsystem.DB;
 
 import java.io.FileInputStream;
 import java.io.IOException;
