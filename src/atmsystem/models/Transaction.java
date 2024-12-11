@@ -18,12 +18,18 @@ public class Transaction {
     private int id;
     private Type type;
     private User user;
+    private int amount;
 
-    public Transaction(int id, Type type, User user) throws Exception {
+    public static int multiple_of_transactoin = 50;
+    
+    
+    public Transaction(int id, Type type, User user, int amount) throws Exception {
         this.id = id;
         set_type(type);
         set_user(user);
+        set_amount(amount);
     }
+    
 
     public void set_id(int id) {
         this.id = id;
@@ -37,15 +43,20 @@ public class Transaction {
         this.type = type;
     }
 
-    public void set_user(User user) throws Exception {
-        if (user == null) {
-            throw new Exception("Should provide user");
-        }
+    public void set_user(User user){
 
         this.user = user;
 
     }
 
+    public void set_amount(int amount) throws Exception{
+        if(amount < 0) throw new Exception("Transation amount should be positive");
+        
+        if(amount % Transaction.multiple_of_transactoin != 0) throw new Exception("Transation amount should be multiples of " + Transaction.multiple_of_transactoin);
+        
+        this.amount = amount;
+    }
+    
     public int get_id() {
         return id;
     }
@@ -56,6 +67,11 @@ public class Transaction {
 
     public User get_user() {
         return user;
+    }
+    
+    @Override
+    public String toString(){
+        return "{id: " + id + ", type: " + type.toString() + ", amount: " + amount + "}";
     }
 
 }

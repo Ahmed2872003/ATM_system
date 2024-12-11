@@ -6,7 +6,7 @@ public class User {
     private String name;
     private Account account;
     
-    final private static int name_length = 3;
+    final public static int name_length = 3;
     
     
     public User(int id, String name, Account account) throws Exception{
@@ -20,7 +20,8 @@ public class User {
         set_account(account);
     }
     
-    public User(Account account) throws Exception{
+    public User(int id, Account account) throws Exception{
+        set_id(id);
         set_account(account);
     }
     
@@ -54,6 +55,11 @@ public class User {
     
     public Account get_account(){
         return account;
+    }
+    
+    @Override
+    public String toString(){
+        return "{user: {id: " + id + ", name: " + name + "}, account: " + account.toString();
     }
 
 }

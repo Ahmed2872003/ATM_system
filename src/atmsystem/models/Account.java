@@ -8,9 +8,9 @@ public class Account {
     private int balance;
     private boolean shared;
 
-    final private static int card_number_length = 16;
-    final private static int pin_length = 4;
-    final private static int inital_balance = 50;
+    final public static int card_number_length = 16;
+    final public static int pin_length = 4;
+    final public static int inital_balance = 50;
     
     public Account(int id, String card_number, String pin, int balance, boolean shared) throws Exception {
         set_id(id);
@@ -51,7 +51,9 @@ public class Account {
         
         if(balance < 0) throw new Exception("Balance must be positive.");
         
-        if(balance % 50 != 0) throw new Exception("Balance must be multiples of 50");
+        if(balance < inital_balance) throw new Exception("Initial balance should be >= " + inital_balance);
+        
+        if(balance % Transaction.multiple_of_transactoin != 0) throw new Exception("Balance must be multiples of " + Transaction.multiple_of_transactoin);
         
         this.balance = balance;
         
@@ -59,8 +61,8 @@ public class Account {
     public void update_balance(int newBalance) throws Exception{
         
         if(newBalance < 0) throw new Exception("No sufficient funds");
-        
-        set_balance(newBalance);
+                
+        this.balance = balance;
     }
     
     
@@ -87,6 +89,10 @@ public class Account {
         return shared;
     }
     
+    @Override
+    public String toString(){
+        return "{id: " + id + ", card_number: " + card_number + ", pin: " + pin + ", balance: " + balance + ", shared: " + shared + "}";
+    }
     
 
 }

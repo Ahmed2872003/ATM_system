@@ -25,8 +25,21 @@ CREATE TABLE account (
     shared BOOLEAN NOT NULL
 );
 
+INSERT INTO account (card_number, balance, shared)
+VALUES ("1234567891234567", 50, false);
 
 
+
+INSERT INTO user (name)
+	VALUES("Ahmed");
+
+SELECT * FROM user;
+SELECT * FROM account;
+
+SELECT LAST_INSERT_ID() as user_id;
+
+DELETE FROM user
+WHERE id = 3
 
 CREATE TABLE transaction_type (
     id int PRIMARY KEY auto_increment,
@@ -43,10 +56,25 @@ CREATE TABLE transaction_log (
     user_id INT NOT NULL,
     account_id INT NOT NULL,
     transaction_type_id INT NOT NULL,
+    amount INT CHECK (amount > 0 AND amount % 50 = 0),
     FOREIGN KEY (user_id) REFERENCES user(id),
     FOREIGN KEY (account_id) REFERENCES account(id),
     FOREIGN KEY (transaction_type_id) REFERENCES transaction_type(id)
 );
+
+INSERT INTO transaction_log(user_id, account_id, transaction_type_id, amount)
+VALUES (10, 12, 2, 50);
+
+
+
+
+SELECT transaction_log.id, transaction_type.id as type_id,transaction_type.type,transaction_log.amount   FROM transaction_log
+INNER JOIN user
+ON transaction_log.user_id = user.id
+INNER JOIN account
+ON transaction_log.account_id = account.id
+INNER JOIN transaction_type
+ON transaction_log.transaction_type_id = transaction_type.id;
 
 
 CREATE TABLE user_account (
@@ -57,6 +85,19 @@ CREATE TABLE user_account (
     FOREIGN KEY (user_id) REFERENCES user(id),
     FOREIGN KEY (account_id) REFERENCES account(id)
 );
+
+
+	SELECT user.id, user.name, account_id, card_number, pin, balance, shared FROM user_account
+	INNER JOIN user
+	on user_account.user_id = user.id
+	INNER JOIN account
+	on user_account.account_id = account.id
+
+SELECT * FROM account
+SELECT * FROM user
+SELECT * FROM user_account
+
+
 
 DELIMITER $$
 
