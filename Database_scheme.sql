@@ -9,7 +9,7 @@ CREATE TABLE admin (
     password VARCHAR(255) NOT NULL CHECK (LENGTH(password) >= 8)
 );
 
-INSERT INTO admin (password)
+INSERT INTO admin (id, password)
 VALUES	(1, "UjM74JkGFHbhQ598lJKk/A==");
 
 CREATE TABLE user (
@@ -21,7 +21,7 @@ CREATE TABLE user (
 CREATE TABLE account (
     id int PRIMARY KEY auto_increment,
     card_number CHAR(16) NOT NULL UNIQUE,
-    balance INT CHECK (balance >= 0 AND balance % 50 = 0),
+    balance INT,
     shared BOOLEAN NOT NULL
 );
 
@@ -45,21 +45,11 @@ CREATE TABLE transaction_log (
     account_id INT NOT NULL,
     transaction_type_id INT NOT NULL,
     amount INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user(id),
     FOREIGN KEY (account_id) REFERENCES account(id),
     FOREIGN KEY (transaction_type_id) REFERENCES transaction_type(id)
 );
-
-
-
-SELECT transaction_log.id, transaction_type.id as type_id,transaction_type.type,transaction_log.amount   FROM transaction_log
-INNER JOIN user
-ON transaction_log.user_id = user.id
-INNER JOIN account
-ON transaction_log.account_id = account.id
-INNER JOIN transaction_type
-ON transaction_log.transaction_type_id = transaction_type.id;
-
 
 CREATE TABLE user_account (
     user_id INT NOT NULL,

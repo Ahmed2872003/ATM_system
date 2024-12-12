@@ -1,6 +1,9 @@
 package atmsystem.models;
 
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class User {
     private int id;
     private String name;
@@ -8,7 +11,7 @@ public class User {
     
     final public static int name_length = 3;
     
-    
+//    Constructors
     public User(int id, String name, Account account) throws Exception{
         set_id(id);
         set_name(name);
@@ -24,6 +27,10 @@ public class User {
         set_id(id);
         set_account(account);
     }
+    
+    public User(){}
+    
+//    Setters
     
     public void set_id(int id){
         this.id = id;
@@ -45,6 +52,8 @@ public class User {
         this.account = account;
     }
     
+//    Getters
+    
     public int get_id(){
         return id;
     }
@@ -57,9 +66,23 @@ public class User {
         return account;
     }
     
+//    Methods
+    
+    public static User convert_to_user(ResultSet rs) throws SQLException, Exception{
+        if(rs == null) return null;
+        
+        User u = new User();
+        
+        u.set_id(rs.getInt("id"));
+        u.set_name(rs.getString("name"));
+        
+        return u;
+    }
+    
+    
     @Override
     public String toString(){
-        return "{user: {id: " + id + ", name: " + name + "}, account: " + account.toString() + "}";
+        return "{id: " + id + ", name: " + name + "}";
     }
 
 }

@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-
 public class Query {
 
     protected Connection conn;
@@ -28,7 +27,7 @@ public class Query {
 
     }
 
-    public  ResultSet get(String query, Object[] params) throws Exception {
+    public ResultSet get(String query, Object[] params) throws Exception {
 
         ResultSet rs = null;
 
@@ -41,7 +40,7 @@ public class Query {
         return rs;
     }
 
-    public  int insert(String query, Object[] params) throws Exception {
+    public int insert(String query, Object[] params) throws Exception {
 
         int id = -1;
 
@@ -53,14 +52,14 @@ public class Query {
 
         ResultSet rs = pstm.getGeneratedKeys();
 
-        rs.next();
-
-        id = rs.getInt(1);
+        if (rs.next()) {
+            id = rs.getInt(1);
+        }
 
         return id;
     }
 
-    public  int update(String query, Object[] params) throws Exception {
+    public int update(String query, Object[] params) throws Exception {
 
         int rowCount = 0;
 
@@ -69,7 +68,7 @@ public class Query {
         fill_params(pstmt, params);
 
         rowCount = pstmt.executeUpdate();
-        
+
         return rowCount;
 
     }

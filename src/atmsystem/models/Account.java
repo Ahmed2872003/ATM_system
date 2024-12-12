@@ -1,7 +1,15 @@
 package atmsystem.models;
 
+
+import atmsystem.utils.Password;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+
+
 public class Account {
 
+//    Properties
     private int id;
     private String card_number;
     private String pin;
@@ -12,6 +20,7 @@ public class Account {
     final public static int pin_length = 4;
     final public static int inital_balance = 50;
     
+//    Constructors
     public Account(int id, String card_number, String pin, int balance, boolean shared) throws Exception {
         set_id(id);
         set_card_number(card_number);
@@ -31,8 +40,9 @@ public class Account {
         set_shared(shared);
     }
     
+    public Account(){}
     
-    
+//   Setters
     public void set_id(int id){
         this.id = id;
     }
@@ -61,6 +71,8 @@ public class Account {
     public void update_balance(int newBalance) throws Exception{
         
         if(newBalance < 0) throw new Exception("No sufficient funds");
+        
+        if(newBalance % Transaction.multiple_of_transactoin != 0) throw new Exception("Amount should be multiples of  " + Transaction.multiple_of_transactoin);
                 
         this.balance = balance;
     }
@@ -72,7 +84,7 @@ public class Account {
     
     
     
-    
+//    Getters
     public int get_id(){
         return id;
     }
@@ -88,6 +100,24 @@ public class Account {
     public boolean get_shared(){
         return shared;
     }
+    
+//  Methods
+
+    public static Account convert_to_account(ResultSet rs) throws SQLException, Exception{
+        if(rs == null) return null;
+        
+        Account acc = new Account();
+        
+        acc.set_id(rs.getInt("id"));
+        acc.set_card_number(rs.getString("card_number"));
+        acc.set_balance(rs.getInt("balance"));
+        acc.set_shared(rs.getBoolean("shared"));
+        
+        return acc;
+        
+    }
+
+    
     
     @Override
     public String toString(){

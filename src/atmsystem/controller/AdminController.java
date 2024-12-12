@@ -20,13 +20,13 @@ public class AdminController implements IAdmin {
     
 
     @Override
-    public void addAccount(User user) throws Exception {
+    public void add_user_Account(User user) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); 
     }
-
+    
     @Override
-    public void resetPin(User user, String newPin) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void add_user_to_existent_account(User user, String cardNumber) throws Exception{
+    
     }
     
     @Override
