@@ -57,6 +57,7 @@ public class Query {
         }
 
         return id;
+
     }
 
     public int update(String query, Object[] params) throws Exception {

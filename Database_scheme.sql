@@ -20,13 +20,10 @@ CREATE TABLE user (
 
 CREATE TABLE account (
     id int PRIMARY KEY auto_increment,
-    card_number CHAR(16) NOT NULL UNIQUE,
     balance INT,
     shared BOOLEAN NOT NULL
 );
 
-INSERT INTO account (card_number, balance, shared)
-VALUES ("1234567891234567", 50, false);
 
 
 CREATE TABLE transaction_type (
@@ -55,18 +52,17 @@ CREATE TABLE user_account (
     user_id INT NOT NULL,
     account_id INT NOT NULL,
     pin VARCHAR(255) NOT NULL,
+    card_number CHAR(16) NOT NULL UNIQUE,
     PRIMARY KEY (user_id, account_id),
     FOREIGN KEY (user_id) REFERENCES user(id),
     FOREIGN KEY (account_id) REFERENCES account(id)
 );
 
 
-
-
 DELIMITER $$
 
 CREATE TRIGGER validate_card_number
-BEFORE INSERT ON account
+BEFORE INSERT ON user_account
 FOR EACH ROW
 BEGIN
     -- Check if card_number is exactly 16 digits
@@ -115,6 +111,14 @@ BEGIN
 END $$
 
 DELIMITER ;
+
+
+SELECT user.id, user.name, account_id, user_account.card_number, pin, balance, shared FROM user_account
+                INNER JOIN user
+                on user_account.user_id = user.id
+                INNER JOIN account
+                on user_account.account_id = account.id
+                WHERE user_account.card_number = ""
 
 
 

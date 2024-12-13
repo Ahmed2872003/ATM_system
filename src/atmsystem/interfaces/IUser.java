@@ -7,8 +7,7 @@ import java.util.ArrayList;
 
 public interface IUser {
     
-    void withdrawl_funds(User user, int withdrawlAmount) throws Exception;
-    void deposite_funds(User user, int depositeAmount) throws Exception;
+    void make_transaction(User user, int amount, Transaction.Type transType) throws Exception;
     int check_balance(User user) throws Exception;
     void change_pin(User user, String newPin) throws Exception;
     ArrayList<Transaction> view_transactions_history(User user) throws Exception;

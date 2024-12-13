@@ -1,7 +1,7 @@
 package atmsystem.models;
 
 
-import atmsystem.utils.Password;
+import atmsystem.utils.EncryptorDecryptor;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -34,8 +34,7 @@ public class Account {
         set_pin(pin);
     }
     
-    public Account(String pin, int balance, boolean shared) throws Exception{
-        set_pin(pin);
+    public Account(int balance, boolean shared) throws Exception{
         set_balance(balance);
         set_shared(shared);
     }
@@ -46,12 +45,16 @@ public class Account {
     public void set_id(int id){
         this.id = id;
     }
-    public void set_card_number(String card_number) throws Exception{        
+    public void set_card_number(String card_number) throws Exception{
+        if(card_number == null) card_number = "";
+        
         if(!card_number.matches("^\\d{"+ card_number_length+"}$")) throw new Exception("Card number must be (" + card_number_length + ") digits.");
         
         this.card_number = card_number;
     }
     public void set_pin(String pin) throws Exception{
+        if(pin == null) pin = "";
+        
         if(!pin.matches("^\\d{" + pin_length + "}$")) throw new Exception("Pin must be (" + pin_length + ") digits.");
         
         this.pin = pin;
@@ -74,7 +77,7 @@ public class Account {
         
         if(newBalance % Transaction.multiple_of_transactoin != 0) throw new Exception("Amount should be multiples of  " + Transaction.multiple_of_transactoin);
                 
-        this.balance = balance;
+        this.balance = newBalance;
     }
     
     

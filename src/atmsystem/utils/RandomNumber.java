@@ -2,7 +2,7 @@ package atmsystem.utils;
 
 import java.util.Random;
 
-public class CardNumber {
+public class RandomNumber {
     
     final private static int bound = 10;
 

@@ -8,7 +8,7 @@ import atmsystem.models.User;
 import atmsystem.models.Transaction;
 import atmsystem.models.UserModel;
 
-import atmsystem.utils.Password;
+import atmsystem.utils.EncryptorDecryptor;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -36,20 +36,43 @@ public class UserController implements IUser {
     }
 
     @Override
-    public void withdrawl_funds(User user, int withdrawlAmount) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    public void make_transaction(User user, int amount, Transaction.Type transType) throws Exception {
+        Account acc = user.get_account();
 
-    private void withdrawl_funds_shared(User user, int withdrawlAmount) throws Exception {
-    }
+        ReentrantLock locker = null;
 
-    @Override
-    public void deposite_funds(User user, int depositeAmount) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+        Query query = new Query();
 
-    private void deposite_funds_shared(User user, int depositeAmount) throws Exception {
+        try {
+            if (acc.get_shared()) {
+                synchronized (locks) {
+                    locks.putIfAbsent(acc.get_id(), new ReentrantLock());
 
+                    locker = locks.get(acc.get_id());
+
+                }
+                locker.lock();
+            }
+
+            query.open_connection();
+
+            int currentBalance = check_balance(user);
+
+            if (transType == Transaction.Type.Withdrawal) { // updates the balance but in the current object to apply validatoin on the new balance
+                acc.update_balance(currentBalance - amount);
+            } else if (transType == Transaction.Type.Deposit) {
+                acc.update_balance(currentBalance + amount);
+            }
+
+            query.update("UPDATE account SET balance = ? WHERE id = ?", new Object[]{acc.get_balance(), acc.get_id()}); // update the balance in the DB
+
+        } finally {
+            query.close_connection();
+
+            if (acc.get_shared()) {
+                locker.unlock();
+            }
+        }
     }
 
     @Override
@@ -61,18 +84,18 @@ public class UserController implements IUser {
 
             ResultSet rs = um.join_with_account("WHERE user.id = ? AND account.id = ?", new Object[]{user.get_id(), user.get_account().get_id()});
 
-            if (!rs.next()) throw new Exception("User_id or account_id not found in user_account model");
-            
-            user.get_account().set_balance(rs.getInt("balance"));
+            if (!rs.next()) {
+                throw new Exception("User_id or account_id not found in user_account model");
+            }
+
+            user.get_account().update_balance(rs.getInt("balance"));
 
             return user.get_account().get_balance();
 
-        } catch (Exception exp) {
-
-            throw exp;
         } finally {
             um.close_connection();
         }
+
     }
 
     @Override
@@ -90,19 +113,16 @@ public class UserController implements IUser {
                 throw new Exception("User_id or account_id not found in user_account model");
             }
 
-            if (!Password.decrypt(rs.getString("pin")).equals(acc.get_pin())) { // check if the old Pin provided by the user matches the one in the database
+            if (!EncryptorDecryptor.decrypt(rs.getString("pin")).equals(acc.get_pin())) { // check if the old Pin provided by the user matches the one in the database
                 throw new Exception("Wrong old passowrd value");
             }
 
             acc.set_pin(newPin);
 
-            String encryptedPin = Password.encrypt(newPin);
+            String encryptedPin = EncryptorDecryptor.encrypt(newPin);
 
             query.update("UPDATE user_account SET pin = ? WHERE user_id = ? AND account_id = ?", new Object[]{encryptedPin, user.get_id(), acc.get_id()});
 
-        } catch (Exception exp) {
-
-            throw exp;
         } finally {
             query.close_connection();
         }
@@ -127,9 +147,6 @@ public class UserController implements IUser {
 
             return transactions;
 
-        } catch (Exception exp) {
-
-            throw exp;
         } finally {
             query.close_connection();
         }
@@ -145,13 +162,13 @@ public class UserController implements IUser {
 
             um.open_connection();
 
-            ResultSet rs = um.join_with_account("WHERE user.id = ? AND account.card_number = ?", new Object[]{user.get_id(), acc.get_card_number()});
+            ResultSet rs = um.join_with_account("WHERE user.id = ? AND user_account.card_number = ?", new Object[]{user.get_id(), acc.get_card_number()});
 
             if (!rs.next()) {
                 throw new Exception("Wrong id or card_number");
             }
 
-            if (!Password.decrypt(rs.getString("pin")).equals(acc.get_pin())) {
+            if (!EncryptorDecryptor.decrypt(rs.getString("pin")).equals(acc.get_pin())) {
                 throw new Exception("Wrong password");
             }
 
@@ -160,9 +177,6 @@ public class UserController implements IUser {
             acc.set_id(rs.getInt("account_id"));
             acc.set_shared(rs.getBoolean("shared"));
 
-        } catch (Exception exception) {
-
-            throw exception;
         } finally {
             um.close_connection();
         }

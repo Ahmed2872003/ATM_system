@@ -12,7 +12,7 @@ import java.util.Base64;
 
 
 
-public class Password {
+public class EncryptorDecryptor {
 
     private static KeyGenerator keyGenerator;
     private static SecretKey key;
