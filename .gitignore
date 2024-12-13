@@ -3,4 +3,4 @@
 /dist/
 /src/atmsystem/lib
 /resources/config.properties
-/user_log
+/user_log.txt
