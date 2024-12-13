@@ -1,4 +1,0 @@
-{id: 1, name: Ahmed}=>{id: 1, card_number: 9244619872051784, pin: 3099, balance: 2000, shared: true}
-{id: 3, name: Mostafa}=>{id: 1, card_number: 7525754831831206, pin: 2688, balance: 2000, shared: true}
-{id: 4, name: Adam}=>{id: 1, card_number: 8726543486305221, pin: 1658, balance: 2000, shared: true}
-{id: 5, name: Mona}=>{id: 2, card_number: 0925615232805534, pin: 0252, balance: 5000, shared: false}
