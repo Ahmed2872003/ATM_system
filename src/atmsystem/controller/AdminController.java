@@ -78,7 +78,7 @@ public class AdminController implements IAdmin {
             ResultSet rs = query.get("SELECT * FROM account WHERE id = ?", new Object[]{acc.get_id()});
 
             if (!rs.next()) {
-                throw new Exception("NO account with that id");
+                throw new Exception("No account with that id");
             }
 
             if (!rs.getBoolean("shared")) {

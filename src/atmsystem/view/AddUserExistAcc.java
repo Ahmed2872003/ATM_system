@@ -4,6 +4,11 @@
  */
 package atmsystem.view;
 
+import atmsystem.controller.AdminController;
+import atmsystem.models.Account;
+import atmsystem.models.User;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author ahmed
@@ -48,6 +53,11 @@ public class AddUserExistAcc extends javax.swing.JDialog {
         });
 
         jButton1.setText("Add");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -103,6 +113,50 @@ public class AddUserExistAcc extends javax.swing.JDialog {
     private void usernameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_usernameFieldActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
+        String username = usernameField.getText();
+
+        String account_id = accountIdField.getText();
+
+        try {
+
+            if (!account_id.matches("^\\d+$")) {
+                throw new Exception("account id must be a positive integer");
+            }
+
+            Account acc = new Account();
+
+            acc.set_id(Integer.valueOf(account_id));
+
+            User user = new User();
+
+            user.set_name(username);
+
+            Thread t = new Thread(() -> {
+
+                try {
+                    AdminController.getInstance().add_user_to_existent_account(user, acc);
+
+                    JOptionPane.showMessageDialog(this, "User added successfully", "Ok message", JOptionPane.INFORMATION_MESSAGE);
+                    
+                    dispose();
+
+                } catch (Exception exp) {
+                    JOptionPane.showMessageDialog(this, exp.getMessage(), "Error Message", JOptionPane.ERROR_MESSAGE);
+
+                }
+            });
+
+            t.start();
+
+        } catch (Exception exp) {
+            JOptionPane.showMessageDialog(this, exp.getMessage(), "Error Message", JOptionPane.ERROR_MESSAGE);
+
+        }
+
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

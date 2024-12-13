@@ -33,6 +33,11 @@ public class Admin {
     public String get_password(){
         return password;
     }
+    
+    @Override
+    public String toString(){
+        return "{id: " + id + ", password: " + password + "}";
+    }
 
 
 }

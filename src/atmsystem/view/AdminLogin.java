@@ -1,5 +1,14 @@
 package atmsystem.view;
 
+import java.awt.Dialog;
+import javax.swing.JOptionPane;
+
+import atmsystem.models.Admin;
+
+import atmsystem.controller.AdminController;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class AdminLogin extends javax.swing.JFrame {
 
     public AdminLogin() {
@@ -101,8 +110,38 @@ public class AdminLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_idFieldActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        dispose();
-        new AdminMenu().setVisible(true);
+
+        try {
+            String adminId = idField.getText();
+            String adminPass = new String(passField.getPassword());
+
+            if (!adminId.matches("^\\d+$")) {
+                throw new Exception("ID must be a positive integer");
+            }
+
+            Admin admin = new Admin(Integer.parseInt(adminId), adminPass);
+
+            Thread t = new Thread(() -> {
+                try {
+                    AdminController.getInstance().login(admin);
+
+                    dispose();
+
+                    new AdminMenu(admin).setVisible(true);
+
+                } catch (Exception exp) {
+                    JOptionPane.showMessageDialog(this, exp.getMessage(), "Error Message", JOptionPane.ERROR_MESSAGE);
+                }
+            });
+
+            t.start();
+            
+            
+        } catch (Exception exp) {
+            JOptionPane.showMessageDialog(this, exp.getMessage(), "Error Message", JOptionPane.ERROR_MESSAGE);
+        }
+
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -149,4 +188,5 @@ public class AdminLogin extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JPasswordField passField;
     // End of variables declaration//GEN-END:variables
+
 }
