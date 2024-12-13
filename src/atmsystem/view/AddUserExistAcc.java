@@ -7,6 +7,7 @@ package atmsystem.view;
 import atmsystem.controller.AdminController;
 import atmsystem.models.Account;
 import atmsystem.models.User;
+import atmsystem.view.utils.Message;
 import javax.swing.JOptionPane;
 
 /**
@@ -139,12 +140,13 @@ public class AddUserExistAcc extends javax.swing.JDialog {
                 try {
                     AdminController.getInstance().add_user_to_existent_account(user, acc);
 
-                    JOptionPane.showMessageDialog(this, "User added successfully", "Ok message", JOptionPane.INFORMATION_MESSAGE);
-                    
+                    Message.show(this, "User added successfully", JOptionPane.INFORMATION_MESSAGE, "Ok");
+
                     dispose();
 
                 } catch (Exception exp) {
-                    JOptionPane.showMessageDialog(this, exp.getMessage(), "Error Message", JOptionPane.ERROR_MESSAGE);
+
+                    Message.show(this, exp.getMessage(), JOptionPane.ERROR_MESSAGE, "Error");
 
                 }
             });
@@ -152,8 +154,7 @@ public class AddUserExistAcc extends javax.swing.JDialog {
             t.start();
 
         } catch (Exception exp) {
-            JOptionPane.showMessageDialog(this, exp.getMessage(), "Error Message", JOptionPane.ERROR_MESSAGE);
-
+            Message.show(this, exp.getMessage(), JOptionPane.ERROR_MESSAGE, "Error");
         }
 
     }//GEN-LAST:event_jButton1ActionPerformed

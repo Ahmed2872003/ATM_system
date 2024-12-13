@@ -37,6 +37,11 @@ public class UserController implements IUser {
 
     @Override
     public void make_transaction(User user, int amount, Transaction.Type transType) throws Exception {
+
+        if (amount == 0) {
+            throw new Exception("Invalid transaction amount");
+        }
+
         Account acc = user.get_account();
 
         ReentrantLock locker = null;
@@ -66,10 +71,18 @@ public class UserController implements IUser {
 
             query.update("UPDATE account SET balance = ? WHERE id = ?", new Object[]{acc.get_balance(), acc.get_id()}); // update the balance in the DB
 
+            if (acc.get_shared()) {
+                locker.unlock();
+            }
+
+            Object[] transaction_log_data = new Object[]{user.get_id(), acc.get_id(), transType.getId(), amount};
+
+            query.update("INSERT INTO transaction_log (user_id, account_id, transaction_type_id, amount) VALUES (?, ?, ?, ?)", transaction_log_data);
+
         } finally {
             query.close_connection();
 
-            if (acc.get_shared()) {
+            if (acc.get_shared() && locker.isHeldByCurrentThread()) {
                 locker.unlock();
             }
         }
@@ -99,7 +112,7 @@ public class UserController implements IUser {
     }
 
     @Override
-    public void change_pin(User user, String newPin) throws Exception {
+    public void change_pin(User user, String oldPin, String newPin) throws Exception {
         Account acc = user.get_account();
 
         Query query = new Query();
@@ -113,8 +126,8 @@ public class UserController implements IUser {
                 throw new Exception("User_id or account_id not found in user_account model");
             }
 
-            if (!EncryptorDecryptor.decrypt(rs.getString("pin")).equals(acc.get_pin())) { // check if the old Pin provided by the user matches the one in the database
-                throw new Exception("Wrong old passowrd value");
+            if (!EncryptorDecryptor.decrypt(rs.getString("pin")).equals(oldPin)) { // check if the old Pin provided by the user matches the one in the database
+                throw new Exception("Wrong old pin value");
             }
 
             acc.set_pin(newPin);
@@ -173,7 +186,7 @@ public class UserController implements IUser {
             }
 
             user.set_name(rs.getString("name"));
-            acc.set_balance(rs.getInt("balance"));
+            acc.update_balance(rs.getInt("balance"));
             acc.set_id(rs.getInt("account_id"));
             acc.set_shared(rs.getBoolean("shared"));
 

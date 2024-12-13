@@ -9,6 +9,7 @@ import atmsystem.controller.UserController;
 import atmsystem.models.Account;
 import atmsystem.models.User;
 import atmsystem.models.UserModel;
+import atmsystem.view.utils.Message;
 import javax.swing.JOptionPane;
 
 /**
@@ -140,21 +141,20 @@ public class AddUserAcc extends javax.swing.JDialog {
                 try {
                     AdminController.getInstance().add_user_Account(user);
 
-                    JOptionPane.showMessageDialog(this, "User added successfully", "Ok message", JOptionPane.INFORMATION_MESSAGE);
+                    Message.show(this, "User added successfully", JOptionPane.INFORMATION_MESSAGE, "Ok message");
 
                     dispose();
-                    
+
                 } catch (Exception exp) {
-                    JOptionPane.showMessageDialog(this, exp.getMessage(), "Error message", JOptionPane.ERROR_MESSAGE);
+                    Message.show(this, exp.getMessage(), JOptionPane.ERROR_MESSAGE, "Error");
 
                 }
             });
-            
-            
+
             t.start();
 
         } catch (Exception exp) {
-            JOptionPane.showMessageDialog(this, exp.getMessage(), "Error message", JOptionPane.ERROR_MESSAGE);
+            Message.show(this, exp.getMessage(), JOptionPane.ERROR_MESSAGE, "Error");
         }
 
 

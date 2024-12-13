@@ -113,13 +113,5 @@ END $$
 DELIMITER ;
 
 
-SELECT user.id, user.name, account_id, user_account.card_number, pin, balance, shared FROM user_account
-                INNER JOIN user
-                on user_account.user_id = user.id
-                INNER JOIN account
-                on user_account.account_id = account.id
-                WHERE user_account.card_number = ""
-
-
 
 

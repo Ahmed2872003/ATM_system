@@ -1,19 +1,26 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package atmsystem.view;
 
-/**
- *
- * @author ahmed
- */
-public class MakeTransAction extends javax.swing.JDialog {
+import atmsystem.controller.UserController;
+import atmsystem.models.Transaction;
+import atmsystem.models.User;
+import atmsystem.models.UserModel;
+import atmsystem.view.utils.Message;
+import java.awt.Dialog;
+import java.text.NumberFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+
+public class MakeTransaction extends javax.swing.JDialog {
 
     /**
-     * Creates new form MakeTransAction
+     * Creates new form MakeTransaction2
      */
-    public MakeTransAction() {
+    public MakeTransaction(java.awt.Frame parent, boolean modal, User user) {
+        super(parent, modal);
+        this.user = user;
+        getCurrentBalance();
         initComponents();
     }
 
@@ -35,8 +42,7 @@ public class MakeTransAction extends javax.swing.JDialog {
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("ATM System (make transaction)");
-        setResizable(false);
+        setTitle("ATM System (Make transaction)");
 
         jLabel1.setText("Current balance");
 
@@ -75,7 +81,7 @@ public class MakeTransAction extends javax.swing.JDialog {
                         .addComponent(amountField)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(140, Short.MAX_VALUE)
+                .addContainerGap(183, Short.MAX_VALUE)
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
@@ -114,49 +120,80 @@ public class MakeTransAction extends javax.swing.JDialog {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void getCurrentBalance() {
+        new Thread(() -> {
+            try {
+                UserController.getInstance().check_balance(user);
+
+                currBalanceTB.setText(formatNumber(user.get_account().get_balance()));
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+        }).start();
+    }
+
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        startTransaction(Transaction.Type.Deposit);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+
+        startTransaction(Transaction.Type.Withdrawal);
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MakeTransAction.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MakeTransAction.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MakeTransAction.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MakeTransAction.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void startTransaction(Transaction.Type transactionType) {
+        String amount = amountField.getText();
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MakeTransAction().setVisible(true);
-            }
-        });
+        try {
+
+            Thread t = new Thread(() -> {
+                try {
+                    if (!amountValidator(amount)) {
+                        throw new Exception("amount should be a positive integer");
+                    }
+
+                    UserController.getInstance().make_transaction(user, Integer.valueOf(amount), transactionType);
+
+                    currBalanceTB.setText(formatNumber(user.get_account().get_balance()));
+
+                    Message.show(this, "Successful transaction", JOptionPane.INFORMATION_MESSAGE, "Success");
+
+                } catch (Exception exp) {
+                    getCurrentBalance();
+                    Message.show(this, exp.getMessage(), JOptionPane.ERROR_MESSAGE, "Error");
+
+                } finally {
+
+                    amountField.setText("");
+                }
+
+            });
+
+            t.start();
+
+        } catch (Exception exp) {
+            amountField.setText("");
+
+            Message.show(this, exp.getMessage(), JOptionPane.ERROR_MESSAGE, "Error");
+        }
     }
 
+    private boolean amountValidator(String amount) {
+        if (!amount.matches("^\\d+$")) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private String formatNumber(int number) {
+        String formattedNumber = NumberFormat.getInstance().format(number);
+
+        return formattedNumber;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField amountField;
     private javax.swing.JLabel currBalanceTB;
@@ -166,4 +203,6 @@ public class MakeTransAction extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
+    private User user;
+
 }

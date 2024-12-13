@@ -4,7 +4,10 @@
  */
 package atmsystem.view;
 
+import atmsystem.models.Account;
+import atmsystem.models.User;
 import java.awt.Dialog;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -15,9 +18,11 @@ public class UserMenu extends javax.swing.JFrame {
     /**
      * Creates new form UserMenu
      */
-    public UserMenu() {
+    public UserMenu(User user) {
+        this.user = user;
         initComponents();
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -99,63 +104,33 @@ public class UserMenu extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
-        MakeTransAction w = new MakeTransAction();
-
-        w.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-
-        w.setVisible(true);
+            MakeTransaction w = new MakeTransaction(this, true, user);
+            
+            w.setModalityType(Dialog.ModalityType.DOCUMENT_MODAL);
+            
+            w.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        ChangePin w = new ChangePin();
+        ChangePin w = new ChangePin(this, true, user);
 
-        w.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+        w.setModalityType(Dialog.ModalityType.DOCUMENT_MODAL);
 
         w.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        TransactionHistory w = new TransactionHistory();
+        TransactionHistory w = new TransactionHistory(this, true, user);
 
-        w.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+        w.setModalityType(Dialog.ModalityType.DOCUMENT_MODAL);
 
         w.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(UserMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(UserMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(UserMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(UserMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new UserMenu().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -163,4 +138,7 @@ public class UserMenu extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
+
+    private User user;
+
 }

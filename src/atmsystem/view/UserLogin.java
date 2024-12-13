@@ -4,6 +4,11 @@
  */
 package atmsystem.view;
 
+import atmsystem.controller.UserController;
+import atmsystem.models.Account;
+import atmsystem.models.User;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author ahmed
@@ -138,9 +143,42 @@ public class UserLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_idFieldActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        dispose();
-        
-        new UserMenu().setVisible(true);
+
+        String userId = idField.getText();
+
+        String cardNumber = cardNumberField.getText();
+
+        String pin = new String(PINField.getPassword());
+
+        try {
+            if (!userId.matches("^\\d+$")) {
+                throw new Exception("Id should be a positive integer");
+            }
+
+            Account acc = new Account(cardNumber, pin);
+            User user = new User(Integer.valueOf(userId), acc);
+
+            Thread t = new Thread(() -> {
+                try {
+                    UserController.getInstance().login(user);
+
+                    dispose();
+
+                    new UserMenu(user).setVisible(true);
+
+                } catch (Exception exp) {
+                    JOptionPane.showMessageDialog(this, exp.getMessage(), "Error message", JOptionPane.ERROR_MESSAGE);
+
+                }
+            });
+
+            t.start();
+
+        } catch (Exception exp) {
+            JOptionPane.showMessageDialog(this, exp.getMessage(), "Error message", JOptionPane.ERROR_MESSAGE);
+        }
+
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

@@ -1,8 +1,15 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
 package atmsystem.view;
+
+import atmsystem.controller.UserController;
+import atmsystem.models.User;
+import atmsystem.view.utils.Message;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -11,9 +18,11 @@ package atmsystem.view;
 public class ChangePin extends javax.swing.JDialog {
 
     /**
-     * Creates new form ChangePin
+     * Creates new form ChangePin2
      */
-    public ChangePin() {
+    public ChangePin(java.awt.Frame parent, boolean modal, User user) {
+        super(parent, modal);
+        this.user = user;
         initComponents();
     }
 
@@ -36,8 +45,7 @@ public class ChangePin extends javax.swing.JDialog {
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("ATM System (Change pin)");
-        setResizable(false);
+        setTitle("ATM System (Change Pin)");
 
         jLabel1.setText("Old PIN");
 
@@ -46,6 +54,11 @@ public class ChangePin extends javax.swing.JDialog {
         jLabel3.setText("Re-enter PIN");
 
         jButton1.setText("Change");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -84,7 +97,7 @@ public class ChangePin extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(reenterNewPinField, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addGap(47, 47, 47))
         );
@@ -104,40 +117,38 @@ public class ChangePin extends javax.swing.JDialog {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ChangePin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ChangePin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ChangePin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ChangePin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String oldPin = new String(oldPinField.getPassword());
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ChangePin().setVisible(true);
+        String newPin = new String(newPinField.getPassword());
+
+        String reEnterNewPin = new String(reenterNewPinField.getPassword());
+
+        try {
+
+            if (!newPin.equals(reEnterNewPin)) {
+                throw new Exception("New pin doesn't match");
             }
-        });
-    }
+
+            new Thread(() -> {
+                try {
+
+                    UserController.getInstance().change_pin(user, oldPin, newPin);
+
+                    Message.show(this, "Pin is updated successfully", JOptionPane.INFORMATION_MESSAGE, "Success");
+
+                } catch (Exception ex) {
+                    Message.show(this, ex.getMessage(), JOptionPane.ERROR_MESSAGE, "Error");
+                }
+            }).start();
+
+        } catch (Exception exp) {
+            Message.show(this, exp.getMessage(), JOptionPane.ERROR_MESSAGE, "Error");
+        }
+
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -149,4 +160,6 @@ public class ChangePin extends javax.swing.JDialog {
     private javax.swing.JPasswordField oldPinField;
     private javax.swing.JPasswordField reenterNewPinField;
     // End of variables declaration//GEN-END:variables
+    private User user;
+
 }

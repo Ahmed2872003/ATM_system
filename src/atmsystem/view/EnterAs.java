@@ -56,13 +56,13 @@ public class EnterAs extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(43, 43, 43)
                 .addComponent(jLabel1)
                 .addGap(37, 37, 37)
                 .addComponent(jButton1)
                 .addGap(18, 18, 18)
                 .addComponent(jButton2)
-                .addContainerGap(55, Short.MAX_VALUE))
+                .addContainerGap(90, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -103,7 +103,7 @@ public class EnterAs extends javax.swing.JFrame {
 
         dispose();
 
-        new UserLogin().setVisible(true);
+        new UserLogin().setVisible(true);;
 
     }//GEN-LAST:event_jButton2ActionPerformed
 

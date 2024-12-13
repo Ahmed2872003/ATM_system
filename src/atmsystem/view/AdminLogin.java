@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 import atmsystem.models.Admin;
 
 import atmsystem.controller.AdminController;
+import atmsystem.view.utils.Message;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -130,15 +131,15 @@ public class AdminLogin extends javax.swing.JFrame {
                     new AdminMenu(admin).setVisible(true);
 
                 } catch (Exception exp) {
-                    JOptionPane.showMessageDialog(this, exp.getMessage(), "Error Message", JOptionPane.ERROR_MESSAGE);
+                    Message.show(this, exp.getMessage(), JOptionPane.ERROR_MESSAGE, "Error");
+
                 }
             });
 
             t.start();
-            
-            
+
         } catch (Exception exp) {
-            JOptionPane.showMessageDialog(this, exp.getMessage(), "Error Message", JOptionPane.ERROR_MESSAGE);
+            Message.show(this, exp.getMessage(), JOptionPane.ERROR_MESSAGE, "Error");
         }
 
 

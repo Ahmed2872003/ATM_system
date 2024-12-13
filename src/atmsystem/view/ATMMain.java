@@ -1,15 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package atmsystem.view;
 
 import javax.swing.JSlider;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
-/**
- *
- * @author ahmed
- */
+
 public class ATMMain extends javax.swing.JFrame {
 
     /**
@@ -135,8 +131,9 @@ public class ATMMain extends javax.swing.JFrame {
         for (int i = 0; i < nOfATMs; i++) {
             ATMs[i] = new Thread(() -> {
                 new EnterAs().setVisible(true);
-            });
-            
+
+            }, "ATM " + (i + 1));
+
             ATMs[i].start();
         }
         dispose();
@@ -152,9 +149,7 @@ public class ATMMain extends javax.swing.JFrame {
 
     }//GEN-LAST:event_ATMsSliderStateChanged
 
-    /**
-     * @param args the command line arguments
-     */
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
