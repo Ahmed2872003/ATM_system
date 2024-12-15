@@ -21,6 +21,7 @@ public class UserController implements IUser {
     private static UserController instance;
 
     HashMap<Integer, ReentrantLock> locks = new HashMap<Integer, ReentrantLock>();
+    
 
 //    Constructor
     private UserController() {
@@ -175,15 +176,17 @@ public class UserController implements IUser {
 
             um.open_connection();
 
-            ResultSet rs = um.join_with_account("WHERE user.id = ? AND user_account.card_number = ?", new Object[]{user.get_id(), acc.get_card_number()});
+            ResultSet rs = um.join_with_account("WHERE user_account.card_number = ?", new Object[]{acc.get_card_number()});
 
             if (!rs.next()) {
-                throw new Exception("Wrong id or card_number");
+                throw new Exception("Wrong card_number");
             }
 
             if (!EncryptorDecryptor.decrypt(rs.getString("pin")).equals(acc.get_pin())) {
                 throw new Exception("Wrong password");
             }
+
+            user.set_id(rs.getInt("id"));
 
             user.set_name(rs.getString("name"));
             acc.update_balance(rs.getInt("balance"));

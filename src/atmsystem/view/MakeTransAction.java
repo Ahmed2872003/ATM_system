@@ -20,7 +20,6 @@ public class MakeTransaction extends javax.swing.JDialog {
     public MakeTransaction(java.awt.Frame parent, boolean modal, User user) {
         super(parent, modal);
         this.user = user;
-        getCurrentBalance();
         initComponents();
     }
 
@@ -34,9 +33,7 @@ public class MakeTransaction extends javax.swing.JDialog {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        currBalanceTB = new javax.swing.JLabel();
         amountField = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -44,11 +41,7 @@ public class MakeTransaction extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("ATM System (Make transaction)");
 
-        jLabel1.setText("Current balance");
-
         jLabel2.setText("Amount");
-
-        currBalanceTB.setText("0");
 
         jButton1.setText("Deposit");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -72,37 +65,28 @@ public class MakeTransaction extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(18, 18, 18)
-                        .addComponent(currBalanceTB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addGap(18, 18, 18)
-                        .addComponent(amountField)))
+                        .addComponent(amountField, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(183, Short.MAX_VALUE)
-                .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
-                .addGap(55, 55, 55))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(38, 38, 38)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(currBalanceTB, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(37, 37, 37)
+                .addGap(31, 31, 31)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(amountField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, Short.MAX_VALUE)
+                .addGap(31, 31, 31)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
-                .addGap(65, 65, 65))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -120,18 +104,6 @@ public class MakeTransaction extends javax.swing.JDialog {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void getCurrentBalance() {
-        new Thread(() -> {
-            try {
-                UserController.getInstance().check_balance(user);
-
-                currBalanceTB.setText(formatNumber(user.get_account().get_balance()));
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-
-        }).start();
-    }
 
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -157,12 +129,9 @@ public class MakeTransaction extends javax.swing.JDialog {
 
                     UserController.getInstance().make_transaction(user, Integer.valueOf(amount), transactionType);
 
-                    currBalanceTB.setText(formatNumber(user.get_account().get_balance()));
-
                     Message.show(this, "Successful transaction", JOptionPane.INFORMATION_MESSAGE, "Success");
 
                 } catch (Exception exp) {
-                    getCurrentBalance();
                     Message.show(this, exp.getMessage(), JOptionPane.ERROR_MESSAGE, "Error");
 
                 } finally {
@@ -189,17 +158,10 @@ public class MakeTransaction extends javax.swing.JDialog {
         return true;
     }
 
-    private String formatNumber(int number) {
-        String formattedNumber = NumberFormat.getInstance().format(number);
-
-        return formattedNumber;
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField amountField;
-    private javax.swing.JLabel currBalanceTB;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
